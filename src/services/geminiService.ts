@@ -1,5 +1,4 @@
-
-import { GoogleGenAI, Type, GenerateContentResponse } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 import { 
   LanguageVariant, 
   WritingStyle, 
@@ -21,11 +20,11 @@ Key Governance Rules:
 Specific processing logic:
 1. Parse input intent and variant.
 2. Enforce source -> target variant compliance.
-3. Apply requested Operations. If multiple are selected, combine them intelligently (e.g., correct then rewrite).
+3. Apply requested Operations. If multiple are selected, combine them intelligently.
 4. If ENRICH is selected, find relevant references using Google Search.
 5. Reference Formatting: Format citations according to requested Citation Style.
-6. Apply Humanisation Engine (micro-syntactic variations, rhythm adjustments).
-7. Perform AI-trace evaluation (simulate ZeroGPT logic) and return aiTracePercentage (0-100).
+6. Apply Humanisation Engine.
+7. Perform AI-trace evaluation (aiTracePercentage 0-100).
 8. Return the final result as a structured JSON object.
 `;
 
@@ -40,7 +39,14 @@ export async function* processTextStream(
   operations: OperationType[],
   citStyle: ReferenceCitationStyle
 ) {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+  // BUSCA A CHAVE NO NAVEGADOR (SEGURANÇA PARA REPO PÚBLICO)
+  const savedKey = localStorage.getItem('GEMINI_API_KEY') || '';
+  
+  if (!savedKey) {
+    throw new Error("API Key não configurada. Por favor, configure a GEMINI_API_KEY no console.");
+  }
+
+  const ai = new GoogleGenAI({ apiKey: savedKey });
 
   const parts: any[] = [
     { text: `
@@ -69,7 +75,7 @@ export async function* processTextStream(
   });
 
   const responseStream = await ai.models.generateContentStream({
-    model: "gemini-3-pro-preview",
+    model: "gemini-1.5-flash", // MODELO ESTÁVEL E GRÁTIS
     contents: { parts },
     config: {
       systemInstruction: SYSTEM_PROMPT,
