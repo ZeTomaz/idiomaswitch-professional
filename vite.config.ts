@@ -27,7 +27,7 @@ export default defineConfig(({ mode }) => {
     },
 
     build: {
-      outDir: 'docs',
+      outDir: 'docs', // Antes estava 'dist'
       sourcemap: false,
       minify: 'terser'
     }
