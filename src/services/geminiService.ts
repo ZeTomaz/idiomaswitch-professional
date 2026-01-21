@@ -39,14 +39,14 @@ export async function* processTextStream(
   operations: OperationType[],
   citStyle: ReferenceCitationStyle
 ) {
-  // BUSCA A CHAVE NO NAVEGADOR (SEGURANÇA PARA REPO PÚBLICO)
-  const savedKey = localStorage.getItem('GEMINI_API_KEY') || '';
+  // CONFIGURAÇÃO DA CHAVE: Coloque a sua chave nova entre as aspas abaixo
+  const apiKey = 'AIzaSyB-jRiTRhxpWGxhiB2z-PdNTuFT1z8wm28';
   
-  if (!savedKey) {
-    throw new Error("API Key não configurada. Por favor, configure a GEMINI_API_KEY no console.");
+  if (!apiKey || apiKey.includes('COLE_AQUI')) {
+    throw new Error("API Key não configurada no código. Por favor, insira a sua chave no ficheiro geminiService.ts");
   }
 
-  const ai = new GoogleGenAI({ apiKey: savedKey });
+  const ai = new GoogleGenAI({ apiKey: apiKey });
 
   const parts: any[] = [
     { text: `
@@ -75,7 +75,7 @@ export async function* processTextStream(
   });
 
   const responseStream = await ai.models.generateContentStream({
-    model: "gemini-1.5-flash", // MODELO ESTÁVEL E GRÁTIS
+    model: "gemini-1.5-flash", 
     contents: { parts },
     config: {
       systemInstruction: SYSTEM_PROMPT,
