@@ -75,7 +75,7 @@ export async function* processTextStream(
   });
 
   const responseStream = await ai.models.generateContentStream({
-    model: "gemini-pro-vision", 
+    model: "gemini-1.5-pro-latest", 
     contents: { parts },
     config: {
       systemInstruction: SYSTEM_PROMPT,
