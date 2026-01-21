@@ -39,11 +39,11 @@ export async function* processTextStream(
   operations: OperationType[],
   citStyle: ReferenceCitationStyle
 ) {
-  // CONFIGURAÇÃO DA CHAVE: Coloque a sua chave nova entre as aspas abaixo
-  const apiKey = 'AIzaSyB-jRiTRhxpWGxhiB2z-PdNTuFT1z8wm28';
+  // A chave API é carregada de forma segura a partir das variáveis de ambiente
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
   
-  if (!apiKey || apiKey.includes('COLE_AQUI')) {
-    throw new Error("API Key não configurada no código. Por favor, insira a sua chave no ficheiro geminiService.ts");
+  if (!apiKey || apiKey.startsWith('COLE_AQUI')) {
+    throw new Error("Chave API não configurada. Por favor, crie um ficheiro .env e adicione a sua chave como VITE_GEMINI_API_KEY=SUA_CHAVE_AQUI.");
   }
 
   const ai = new GoogleGenAI({ apiKey: apiKey });
